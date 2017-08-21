@@ -8,6 +8,8 @@ import Lampemm.Model.CurrentPlayback;
 public interface MusicDisplay {
     void setDisplayForCurrentPlayback(CurrentPlayback currentPlayback);
 
+    void setStatus(String status);
+
     void setTitle(String title);
 
     void setArtist(String artist);

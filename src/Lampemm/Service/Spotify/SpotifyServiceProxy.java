@@ -52,18 +52,19 @@ public class SpotifyServiceProxy {
 
         if (!Strings.isNullOrEmpty(credentials.getAccessToken()) &&
                 !Strings.isNullOrEmpty(credentials.getRefreshToken())) {
+            // If credentials exist in the file, use them
             spotify.setAccessToken(credentials.getAccessToken());
             spotify.setRefreshToken(credentials.getRefreshToken());
         } else {
             try {
+                // If credentials don't ex
                 AuthorizationCodeCredentials authorizationCodeCredentials = spotify.authorizationCodeGrant(credentials.getCode()).build().get();
                 credentials.writeAuthorizationCodeCredentials(authorizationCodeCredentials);
                 spotify.setAccessToken(authorizationCodeCredentials.getAccessToken());
                 spotify.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
             } catch (IOException | WebApiException ex) {
                 ex.printStackTrace();
-
-                // Credentials aren't working, clear credentials and generate again
+                // Credentials aren't working, clear credentials and generate again and put in a file
                 credentials.clearAuthorizationCodeCredentials();
                 String authorizeUrl = spotify.createAuthorizeURL(credentials.getScopes(), "none");
                 System.out.println(authorizeUrl);
@@ -106,7 +107,7 @@ public class SpotifyServiceProxy {
             currentPlayback = new CurrentPlayback(currentPlaybackRequest.get());
             cachedCurrentPlayback = currentPlayback;
         } catch (IOException | WebApiException ex) {
-            ex.printStackTrace();
+            System.out.println(ex);
             currentPlayback = cachedCurrentPlayback;
         }
         return currentPlayback;

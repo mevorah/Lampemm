@@ -30,11 +30,15 @@ public class SpotifyPoller {
         this.musicDisplay = musicDisplay;
     }
 
+    /**
+     * Begin continously polling.
+     */
     public void start () {
         final Runnable updater = new Runnable() {
             @Override
             public void run() {
                 CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
+                trackProgressBar.getTimeElapsedForPosition(currentPlayback);
                 trackProgressBar.setPositionForTimeElapsed(currentPlayback);
                 musicDisplay.setDisplayForCurrentPlayback(currentPlayback);
             }

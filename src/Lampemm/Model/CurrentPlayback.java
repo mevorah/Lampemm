@@ -54,7 +54,7 @@ public class CurrentPlayback {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Title:" + getTitle() + "\n");
         stringBuilder.append("Artist:" + getArtists() + "\n");
-        stringBuilder.append("Time:" + getTimeElapsed() + "/" + getDuration());
+        stringBuilder.append("Time:" + new DisplayableTime(getTimeElapsed()));
         return stringBuilder.toString();
     }
 }

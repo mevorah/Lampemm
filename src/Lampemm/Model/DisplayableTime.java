@@ -1,5 +1,8 @@
 package Lampemm.Model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Mark on 8/12/17.
  */
@@ -12,6 +15,10 @@ public class DisplayableTime {
     }
 
     public String toString() {
-        return null;
+        int seconds = timeMillis / 1000;
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+        String time = String.format("%02d:%02d", minutes, remainingSeconds);
+        return time;
     }
 }

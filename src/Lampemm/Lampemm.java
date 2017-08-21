@@ -1,6 +1,7 @@
 package Lampemm;
 
 import Lampemm.Service.Controls.TrackProgressBar;
+import Lampemm.Service.Display.MusicDisplay;
 import Lampemm.Service.Display.TwoLineDisplay;
 import Lampemm.Service.Spotify.SpotifyServiceProxy;
 
@@ -9,8 +10,11 @@ import Lampemm.Service.Spotify.SpotifyServiceProxy;
  */
 public class Lampemm {
     public static void main(String [] args) {
+        MusicDisplay display = TwoLineDisplay.getInstance();
+        display.setStatus("Lampemm");
+
         SpotifyPoller spotifyPoller = new SpotifyPoller(SpotifyServiceProxy.getInstance(),
-                TrackProgressBar.getInstance(), TwoLineDisplay.getInstance());
+                TrackProgressBar.getInstance(), display);
         spotifyPoller.start();
 //        SpotifyPoster spotifyPoster = new SpotifyPoster();
 //        spotifyPoster.start();
