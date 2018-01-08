@@ -16,7 +16,9 @@ public class Lampemm {
         SpotifyPoller spotifyPoller = new SpotifyPoller(SpotifyServiceProxy.getInstance(),
                 TrackProgressBar.getInstance(), display);
         spotifyPoller.start();
-//        SpotifyPoster spotifyPoster = new SpotifyPoster();
-//        spotifyPoster.start();
+
+        SpotifyPoster spotifyPoster = new SpotifyPoster(SpotifyServiceProxy.getInstance(),
+                TrackProgressBar.getInstance(), display);
+        spotifyPoster.start();
     }
 }

@@ -1,0 +1,28 @@
+#!/bin/bash
+# Lampemm
+#
+# description: Lampemm
+
+### BEGIN INIT INFO
+# Provides:          lampemm
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     
+# Default-Stop:      
+# Short-Description: 
+# Description:       
+### END INIT INFO
+
+case $1 in
+    start)
+        /bin/bash /etc/init.d/startLampemm
+    ;;
+    stop)
+        /bin/bash /etc/init.d/stopLampemm
+    ;;
+    restart)
+        /bin/bash /etc/init.d/startLampemm
+        /bin/bash /etc/init.d/stopLampemm
+    ;;
+esac
+exit 0

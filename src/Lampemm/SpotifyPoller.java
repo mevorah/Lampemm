@@ -11,7 +11,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Mark on 8/11/17.
+ * Responsible for polling spotify playback and
+ * updating peripheral devices.
  */
 public class SpotifyPoller {
     private final ScheduledExecutorService playbackScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -25,28 +26,29 @@ public class SpotifyPoller {
     public SpotifyPoller (SpotifyServiceProxy spotifyServiceProxy,
                           TrackProgressBar trackProgressBar,
                           MusicDisplay musicDisplay) {
-        this.spotifyServiceProxy = SpotifyServiceProxy.getInstance();
-        this.trackProgressBar = TrackProgressBar.getInstance();
+        this.spotifyServiceProxy = spotifyServiceProxy;
+        this.trackProgressBar = trackProgressBar;
         this.musicDisplay = musicDisplay;
     }
 
     /**
-     * Begin continously polling.
+     * Begin continously polling and updating relevant
+     * hardware (progress bar and display)
      */
     public void start () {
         final Runnable updater = new Runnable() {
             @Override
             public void run() {
                 CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
-                trackProgressBar.getTimeElapsedForPosition(currentPlayback);
-                trackProgressBar.setPositionForTimeElapsed(currentPlayback);
-                musicDisplay.setDisplayForCurrentPlayback(currentPlayback);
+                if (!trackProgressBar.isTracking()) {
+                    trackProgressBar.setPositionForTimeElapsed(currentPlayback);
+                    musicDisplay.setDisplayForCurrentPlayback(currentPlayback);
+                }
             }
         };
 
         final ScheduledFuture<?> updaterHandle = playbackScheduler.scheduleAtFixedRate(updater,
                 POLLING_INITIAL_DELAY_MILLIS, PLAYBACK_POLLING_RATE_MILLIS, TimeUnit.MILLISECONDS);
-
     }
 
 }

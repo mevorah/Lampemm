@@ -1,0 +1,24 @@
+<component name="libraryTable">
+  <library name="se.michaelthelin.spotify:spotify-web-api-java:1.5.0" type="repository">
+    <properties maven-id="se.michaelthelin.spotify:spotify-web-api-java:1.5.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../spotify-web-api-java-1.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../protobuf-java-2.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../commons-httpclient-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../commons-logging-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../commons-codec-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../json-lib-2.4-jdk15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../commons-beanutils-1.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../commons-collections-3.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../commons-lang-2.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../ezmorph-1.0.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../guava-18.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../spotify-web-api-java-1.5.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../spotify-web-api-java-1.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

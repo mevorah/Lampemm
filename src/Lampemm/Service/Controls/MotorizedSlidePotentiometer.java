@@ -4,8 +4,6 @@ import com.pi4j.io.gpio.*;
 import com.pi4j.io.spi.SpiChannel;
 import com.pi4j.io.spi.SpiDevice;
 import com.pi4j.io.spi.SpiFactory;
-import com.pi4j.io.spi.SpiMode;
-import com.pi4j.wiringpi.Lcd;
 
 import java.io.IOException;
 
@@ -14,22 +12,25 @@ import java.io.IOException;
  */
 public class MotorizedSlidePotentiometer {
 
-    private static final float MAX_RESISTANCE = 1023;
-    private static final float MIN_RESISTANCE = 0;
+    private static final float MAX_RESISTANCE = 1006; //True max: 1023
+    private static final float MIN_RESISTANCE = 18;
     private static final float TOLERANCE = 5;
 
     private SpiDevice spi;
-    private static final short CHANNEL_ZERO = 0;
+    private static final short CHANNEL_ONE = 1;
 
     // Motor Driver
     final GpioPinDigitalOutput pwmA;
     final GpioPinDigitalOutput ain1;
     final GpioPinDigitalOutput ain2;
     final GpioPinDigitalOutput stby;
-
     final GpioController gpio = GpioFactory.getInstance();
 
     private static final MotorizedSlidePotentiometer instance = new MotorizedSlidePotentiometer();
+
+    // Rate at which potentiometer is moving
+    private float currentNaturalPosition = 0;
+    private float nextNaturalPosition = 0;
 
     private MotorizedSlidePotentiometer() {
         System.out.println("Setting up potentiometer");
@@ -58,30 +59,59 @@ public class MotorizedSlidePotentiometer {
      * @param position
      */
     public void setPosition(float position) throws IOException {
-        float target = position * MAX_RESISTANCE;
+        // Set current and next position
+        this.currentNaturalPosition = this.nextNaturalPosition;
+        this.nextNaturalPosition = position;
+
+        float target =  MAX_RESISTANCE - (MIN_RESISTANCE + position * (MAX_RESISTANCE - MIN_RESISTANCE));
+
         float low = target - TOLERANCE;
         float high = target + TOLERANCE;
 
-        int value = getValue();
+        int value = getValue(CHANNEL_ONE);
         while (value < low || value > high) {
-            System.out.println(value);
-            value = getValue();
+            System.out.println("Target:"+target + "Value:"+value);
+            value = getValue(CHANNEL_ONE);
             if (value < low) {
+                System.out.print(" [ValueLow]");
                 pwmA.high();
                 ain2.low();
                 ain1.high();
                 stby.high();
             } else if (value > high) {
+                System.out.print(" [ValueHigh]");
                 pwmA.high();
                 ain2.high();
                 ain1.low();
                 stby.high();
+            } else {
+                break;
             }
         }
         pwmA.low();
         ain2.low();
         ain1.low();
         stby.high();
+    }
+
+    /**
+     * Return the natural interval for the song playing i.e the difference
+     * in resistance
+     * @return
+     */
+    public float getNaturalInterval() {
+        return nextNaturalPosition - currentNaturalPosition;
+    }
+
+    /**
+     * Returns the actual interval of resistance.
+     *
+     * 0 -> No manual tracking
+     *
+     * @return
+     */
+    public float getActualInterval() {
+        return getPositionResistance() - currentNaturalPosition;
     }
 
     /**
@@ -92,9 +122,19 @@ public class MotorizedSlidePotentiometer {
      * @return
      */
     public float getPosition() throws IOException {
-        float value = (float) getValue();
-        float position = value / MAX_RESISTANCE;
+        float currentPositionResistance = getPositionResistance();
+        float position = currentPositionResistance / MAX_RESISTANCE;
         return position;
+    }
+
+    public float getPositionResistance() {
+        try {
+            return (float) getValue(CHANNEL_ONE);
+        } catch (IOException e) {
+            System.out.println("Error getting current resistance reading. Failed with:" + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**
@@ -102,12 +142,12 @@ public class MotorizedSlidePotentiometer {
      * @return conversion value for specified analog input channel
      * @throws IOException
      */
-    public int getValue() throws IOException {
+    public int getValue(final int channel) throws IOException {
 
         // create a data buffer and initialize a conversion request payload
         byte data[] = new byte[] {
                 (byte) 0b00000001,                              // first byte, start bit
-                (byte)(0b10000000 |( ((CHANNEL_ZERO & 7) << 4))),    // second byte transmitted -> (SGL/DIF = 1, D2=D1=D0=0)
+                (byte)(0b10000000 |( ((channel & 7) << 4))),    // second byte transmitted -> (SGL/DIF = 1, D2=D1=D0=0)
                 (byte) 0b00000000                               // third byte transmitted....don't care
         };
 

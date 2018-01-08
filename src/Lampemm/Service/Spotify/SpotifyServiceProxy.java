@@ -106,6 +106,7 @@ public class SpotifyServiceProxy {
         try {
             currentPlayback = new CurrentPlayback(currentPlaybackRequest.get());
             cachedCurrentPlayback = currentPlayback;
+            System.out.println(currentPlayback);
         } catch (IOException | WebApiException ex) {
             System.out.println(ex);
             currentPlayback = cachedCurrentPlayback;
