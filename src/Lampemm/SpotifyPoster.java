@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class SpotifyPoster {
     private final ScheduledExecutorService trackProgressBarPoller = Executors.newSingleThreadScheduledExecutor();
     private final long POLLING_INITIAL_DELAY_MILLIS = 0;
-    private final long PROGRESS_POLLING_RATE_MILLIS = 250;
+    private final long PROGRESS_POLLING_RATE_MILLIS = 500;
 
     private final SpotifyServiceProxy spotifyServiceProxy;
     private final TrackProgressBar trackProgressBar;
@@ -35,7 +35,7 @@ public class SpotifyPoster {
 
     public void start() {
         final Runnable updater = new Runnable() {
-            private boolean isTrackingPreviousValue = false;
+            private boolean isTrackingPreviously = false;
 
             /**
              * Triggered callback when the track progress bar's
@@ -44,17 +44,22 @@ public class SpotifyPoster {
             public void progressManuallyChanged() {
                 CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
                 int positionTime = trackProgressBar.getTimeElapsedForPosition(currentPlayback);
+                System.out.println("Progress Changed, moving to:" + positionTime);
                 spotifyServiceProxy.seekToPosition(positionTime);
             }
 
             @Override
             public void run() {
                 if (trackProgressBar.isTracking()) {
+                    isTrackingPreviously = true;
                     CurrentPlayback currentPlayback = spotifyServiceProxy.getCachedCurrentPlayback();
-                    int positionTime = trackProgressBar.getTimeElapsedForPosition(currentPlayback);
-                    DisplayableTime displayableTime = new DisplayableTime(positionTime);
-                    musicDisplay.setTime(displayableTime.toString());
-                } else if (isTrackingPreviousValue && trackProgressBar.isTracking()) {
+                    if (currentPlayback != null) {
+                        int positionTime = trackProgressBar.getTimeElapsedForPosition(currentPlayback);
+                        DisplayableTime displayableTime = new DisplayableTime(positionTime);
+                        musicDisplay.setTime(displayableTime.toString());
+                    }
+                } else if (isTrackingPreviously && !trackProgressBar.isTracking()) {
+                    isTrackingPreviously = false;
                     progressManuallyChanged();
                 }
             }

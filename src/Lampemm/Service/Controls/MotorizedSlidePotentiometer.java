@@ -12,8 +12,8 @@ import java.io.IOException;
  */
 public class MotorizedSlidePotentiometer {
 
-    private static final float MAX_RESISTANCE = 1006; //True max: 1023
-    private static final float MIN_RESISTANCE = 18;
+    private static final float MAX_RESISTANCE = 988; //True max: 1023
+    private static final float MIN_RESISTANCE = 9;
     private static final float TOLERANCE = 5;
 
     private SpiDevice spi;
@@ -59,27 +59,24 @@ public class MotorizedSlidePotentiometer {
      * @param position
      */
     public void setPosition(float position) throws IOException {
-        // Set current and next position
-        this.currentNaturalPosition = this.nextNaturalPosition;
-        this.nextNaturalPosition = position;
+        float target =  getResistanceForPosition(position);
 
-        float target =  MAX_RESISTANCE - (MIN_RESISTANCE + position * (MAX_RESISTANCE - MIN_RESISTANCE));
+        // Set current resistance, and next resistance during playback
+        this.currentNaturalPosition = this.nextNaturalPosition;
+        this.nextNaturalPosition = target;
 
         float low = target - TOLERANCE;
         float high = target + TOLERANCE;
 
         int value = getValue(CHANNEL_ONE);
         while (value < low || value > high) {
-            System.out.println("Target:"+target + "Value:"+value);
             value = getValue(CHANNEL_ONE);
             if (value < low) {
-                System.out.print(" [ValueLow]");
                 pwmA.high();
                 ain2.low();
                 ain1.high();
                 stby.high();
             } else if (value > high) {
-                System.out.print(" [ValueHigh]");
                 pwmA.high();
                 ain2.high();
                 ain1.low();
@@ -100,7 +97,7 @@ public class MotorizedSlidePotentiometer {
      * @return
      */
     public float getNaturalInterval() {
-        return nextNaturalPosition - currentNaturalPosition;
+        return currentNaturalPosition - nextNaturalPosition;
     }
 
     /**
@@ -111,7 +108,7 @@ public class MotorizedSlidePotentiometer {
      * @return
      */
     public float getActualInterval() {
-        return getPositionResistance() - currentNaturalPosition;
+        return currentNaturalPosition - getResistance();
     }
 
     /**
@@ -122,12 +119,20 @@ public class MotorizedSlidePotentiometer {
      * @return
      */
     public float getPosition() throws IOException {
-        float currentPositionResistance = getPositionResistance();
-        float position = currentPositionResistance / MAX_RESISTANCE;
+        float currentPositionResistance = getResistance();
+        float position = getPositionForResistance(currentPositionResistance);
         return position;
     }
 
-    public float getPositionResistance() {
+    public float getPositionForResistance(float resistance) {
+        return (MAX_RESISTANCE - resistance) / (MAX_RESISTANCE - MIN_RESISTANCE);
+    }
+
+    public float getResistanceForPosition(float position) {
+        return MAX_RESISTANCE - (position * (MAX_RESISTANCE - MIN_RESISTANCE));
+    }
+
+    public float getResistance() {
         try {
             return (float) getValue(CHANNEL_ONE);
         } catch (IOException e) {

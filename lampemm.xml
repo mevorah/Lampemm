@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="lampemm" default="all">
+  
+  
+  <property file="lampemm.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/jfxrt.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="lib/ant-javafx.jar"/>
+      <include name="lib/dt.jar"/>
+      <include name="lib/javafx-mx.jar"/>
+      <include name="lib/jconsole.jar"/>
+      <include name="lib/packager.jar"/>
+      <include name="lib/sa-jdi.jar"/>
+      <include name="lib/tools.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.com.pi4j:pi4j-core:1.1.classpath">
+    <pathelement location="${basedir}/../pi4j-core-1.1.jar"/>
+  </path>
+  
+  <path id="library.com.pi4j:pi4j-device:1.1.classpath">
+    <pathelement location="${basedir}/../pi4j-core-1.1.jar"/>
+    <pathelement location="${basedir}/../pi4j-device-1.1.jar"/>
+    <pathelement location="${basedir}/../pi4j-gpio-extension-1.1.jar"/>
+  </path>
+  
+  <path id="library.com.pi4j:pi4j-gpio-extension:1.1.classpath">
+    <pathelement location="${basedir}/../pi4j-core-1.1.jar"/>
+    <pathelement location="${basedir}/../pi4j-gpio-extension-1.1.jar"/>
+  </path>
+  
+  <path id="library.junit:junit:4.12.classpath">
+    <pathelement location="${basedir}/SpotifyLibrary/hamcrest-core-1.3.jar"/>
+    <pathelement location="${basedir}/SpotifyLibrary/junit-4.12.jar"/>
+  </path>
+  
+  <path id="library.org.mockito:mockito-core:2.1.0.classpath">
+    <pathelement location="${basedir}/../byte-buddy-1.4.26.jar"/>
+    <pathelement location="${basedir}/../byte-buddy-agent-1.4.26.jar"/>
+    <pathelement location="${basedir}/../mockito-core-2.1.0.jar"/>
+    <pathelement location="${basedir}/../objenesis-2.4.jar"/>
+  </path>
+  
+  <path id="library.se.michaelthelin.spotify:spotify-web-api-java:1.5.0.classpath">
+    <pathelement location="${basedir}/../commons-beanutils-1.8.0.jar"/>
+    <pathelement location="${basedir}/../commons-codec-1.2.jar"/>
+    <pathelement location="${basedir}/../commons-collections-3.2.1.jar"/>
+    <pathelement location="${basedir}/../commons-httpclient-3.1.jar"/>
+    <pathelement location="${basedir}/../commons-lang-2.5.jar"/>
+    <pathelement location="${basedir}/../commons-logging-1.0.4.jar"/>
+    <pathelement location="${basedir}/../ezmorph-1.0.6.jar"/>
+    <pathelement location="${basedir}/../guava-18.0.jar"/>
+    <pathelement location="${basedir}/../json-lib-2.4-jdk15.jar"/>
+    <pathelement location="${basedir}/../protobuf-java-2.5.0.jar"/>
+    <pathelement location="${basedir}/../spotify-web-api-java-1.5.0.jar"/>
+  </path>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  <import file="${basedir}/../spotify-web-api-java/src/main/module_main.xml"/>
+  
+  <import file="${basedir}/module_lampemm.xml"/>
+  
+  <import file="${basedir}/../spotify-web-api-java/src/test/module_test.xml"/>
+  
+  <import file="${basedir}/../spotify-web-api-java/module_spotify-web-api-java.xml"/>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.main, clean.module.lampemm, clean.module.test, clean.module.spotify-web-api-java, clean.artifact.lampemm:jar, clean.artifact.lampemm:jar2" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.main, compile.module.lampemm, compile.module.test, compile.module.spotify-web-api-java" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.lampemm:jar" value="${basedir}/out/artifacts/Lampemm_jar"/>
+    <property name="artifact.output.lampemm:jar2" value="${basedir}/out/artifacts/Lampemm_jar2"/>
+    <property name="artifact.output.lampemm:potentiometertest" value="${basedir}/out/artifacts/Lampemm_potentiometerTest"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.Lampemm.jar" value="${artifacts.temp.dir}/Lampemm.jar"/>
+    <property name="temp.jar.path.Lampemm.jar2" value="${artifacts.temp.dir}/1/Lampemm.jar"/>
+    <mkdir dir="${artifacts.temp.dir}/1"/>
+    <property name="temp.jar.path.Lampemm.jar3" value="${artifacts.temp.dir}/2/Lampemm.jar"/>
+    <mkdir dir="${artifacts.temp.dir}/2"/>
+  </target>
+  
+  <target name="clean.artifact.lampemm:jar" description="clean Lampemm:jar artifact output">
+    <delete dir="${artifact.output.lampemm:jar}"/>
+  </target>
+  
+  <target name="clean.artifact.lampemm:jar2" description="clean Lampemm:jar2 artifact output">
+    <delete dir="${artifact.output.lampemm:jar2}"/>
+  </target>
+  
+  <target name="artifact.lampemm:jar" depends="init.artifacts, compile.module.lampemm, compile.module.main" description="Build &#39;Lampemm:jar&#39; artifact">
+    <mkdir dir="${artifact.output.lampemm:jar}"/>
+    <jar destfile="${temp.jar.path.Lampemm.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${lampemm.output.dir}"/>
+      <zipfileset dir="${main.output.dir}"/>
+      <zipfileset dir="${pi4j-1.2-snapshot.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.Lampemm.jar}" tofile="${artifact.output.lampemm:jar}/Lampemm.jar"/>
+    <copy file="${basedir}/SpotifyLibrary/junit-4.12.jar" tofile="${artifact.output.lampemm:jar}/junit-4.12.jar"/>
+    <copy file="${basedir}/SpotifyLibrary/hamcrest-core-1.3.jar" tofile="${artifact.output.lampemm:jar}/hamcrest-core-1.3.jar"/>
+    <copy file="${basedir}/../spotify-web-api-java-1.5.0.jar" tofile="${artifact.output.lampemm:jar}/spotify-web-api-java-1.5.0.jar"/>
+    <copy file="${basedir}/../protobuf-java-2.5.0.jar" tofile="${artifact.output.lampemm:jar}/protobuf-java-2.5.0.jar"/>
+    <copy file="${basedir}/../commons-httpclient-3.1.jar" tofile="${artifact.output.lampemm:jar}/commons-httpclient-3.1.jar"/>
+    <copy file="${basedir}/../commons-logging-1.0.4.jar" tofile="${artifact.output.lampemm:jar}/commons-logging-1.0.4.jar"/>
+    <copy file="${basedir}/../commons-codec-1.2.jar" tofile="${artifact.output.lampemm:jar}/commons-codec-1.2.jar"/>
+    <copy file="${basedir}/../json-lib-2.4-jdk15.jar" tofile="${artifact.output.lampemm:jar}/json-lib-2.4-jdk15.jar"/>
+    <copy file="${basedir}/../commons-beanutils-1.8.0.jar" tofile="${artifact.output.lampemm:jar}/commons-beanutils-1.8.0.jar"/>
+    <copy file="${basedir}/../commons-collections-3.2.1.jar" tofile="${artifact.output.lampemm:jar}/commons-collections-3.2.1.jar"/>
+    <copy file="${basedir}/../commons-lang-2.5.jar" tofile="${artifact.output.lampemm:jar}/commons-lang-2.5.jar"/>
+    <copy file="${basedir}/../ezmorph-1.0.6.jar" tofile="${artifact.output.lampemm:jar}/ezmorph-1.0.6.jar"/>
+    <copy file="${basedir}/../guava-18.0.jar" tofile="${artifact.output.lampemm:jar}/guava-18.0.jar"/>
+  </target>
+  
+  <target name="artifact.lampemm:jar2" depends="init.artifacts, compile.module.lampemm, compile.module.main" description="Build &#39;Lampemm:jar2&#39; artifact">
+    <mkdir dir="${artifact.output.lampemm:jar2}"/>
+    <jar destfile="${temp.jar.path.Lampemm.jar2}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset file="${basedir}/out/META-INF/MANIFEST.MF" prefix="META-INF"/>
+      <zipfileset dir="${lampemm.output.dir}"/>
+      <zipfileset dir="${main.output.dir}"/>
+      <zipfileset dir="${pi4j-1.2-snapshot.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.Lampemm.jar2}" tofile="${artifact.output.lampemm:jar2}/Lampemm.jar"/>
+    <copy file="${basedir}/../mockito-core-2.1.0.jar" tofile="${artifact.output.lampemm:jar2}/mockito-core-2.1.0.jar"/>
+    <copy file="${basedir}/../byte-buddy-1.4.26.jar" tofile="${artifact.output.lampemm:jar2}/byte-buddy-1.4.26.jar"/>
+    <copy file="${basedir}/../byte-buddy-agent-1.4.26.jar" tofile="${artifact.output.lampemm:jar2}/byte-buddy-agent-1.4.26.jar"/>
+    <copy file="${basedir}/../objenesis-2.4.jar" tofile="${artifact.output.lampemm:jar2}/objenesis-2.4.jar"/>
+    <copy file="${basedir}/../spotify-web-api-java-1.5.0.jar" tofile="${artifact.output.lampemm:jar2}/spotify-web-api-java-1.5.0.jar"/>
+    <copy file="${basedir}/../protobuf-java-2.5.0.jar" tofile="${artifact.output.lampemm:jar2}/protobuf-java-2.5.0.jar"/>
+    <copy file="${basedir}/../commons-httpclient-3.1.jar" tofile="${artifact.output.lampemm:jar2}/commons-httpclient-3.1.jar"/>
+    <copy file="${basedir}/../commons-logging-1.0.4.jar" tofile="${artifact.output.lampemm:jar2}/commons-logging-1.0.4.jar"/>
+    <copy file="${basedir}/../commons-codec-1.2.jar" tofile="${artifact.output.lampemm:jar2}/commons-codec-1.2.jar"/>
+    <copy file="${basedir}/../json-lib-2.4-jdk15.jar" tofile="${artifact.output.lampemm:jar2}/json-lib-2.4-jdk15.jar"/>
+    <copy file="${basedir}/../commons-beanutils-1.8.0.jar" tofile="${artifact.output.lampemm:jar2}/commons-beanutils-1.8.0.jar"/>
+    <copy file="${basedir}/../commons-collections-3.2.1.jar" tofile="${artifact.output.lampemm:jar2}/commons-collections-3.2.1.jar"/>
+    <copy file="${basedir}/../commons-lang-2.5.jar" tofile="${artifact.output.lampemm:jar2}/commons-lang-2.5.jar"/>
+    <copy file="${basedir}/../ezmorph-1.0.6.jar" tofile="${artifact.output.lampemm:jar2}/ezmorph-1.0.6.jar"/>
+    <copy file="${basedir}/../guava-18.0.jar" tofile="${artifact.output.lampemm:jar2}/guava-18.0.jar"/>
+    <copy file="${basedir}/SpotifyLibrary/junit-4.12.jar" tofile="${artifact.output.lampemm:jar2}/junit-4.12.jar"/>
+    <copy file="${basedir}/SpotifyLibrary/hamcrest-core-1.3.jar" tofile="${artifact.output.lampemm:jar2}/hamcrest-core-1.3.jar"/>
+  </target>
+  
+  <target name="artifact.lampemm:potentiometertest" depends="init.artifacts, compile.module.lampemm, compile.module.main" description="Build &#39;Lampemm:potentiometerTest&#39; artifact">
+    <property name="artifact.temp.output.lampemm:potentiometertest" value="${artifacts.temp.dir}/Lampemm_potentiometerTest"/>
+    <mkdir dir="${artifact.temp.output.lampemm:potentiometertest}"/>
+    <jar destfile="${temp.jar.path.Lampemm.jar3}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset file="${basedir}/src/Lampemm/Util/META-INF/MANIFEST.MF" prefix="META-INF"/>
+      <zipfileset dir="${lampemm.output.dir}"/>
+      <zipfileset dir="${main.output.dir}"/>
+      <zipfileset dir="${pi4j-1.2-snapshot.output.dir}"/>
+      <zipfileset src="${basedir}/../mockito-core-2.1.0.jar"/>
+      <zipfileset src="${basedir}/../byte-buddy-1.4.26.jar"/>
+      <zipfileset src="${basedir}/../byte-buddy-agent-1.4.26.jar"/>
+      <zipfileset src="${basedir}/../objenesis-2.4.jar"/>
+      <zipfileset src="${basedir}/../spotify-web-api-java-1.5.0.jar"/>
+      <zipfileset src="${basedir}/../protobuf-java-2.5.0.jar"/>
+      <zipfileset src="${basedir}/../commons-httpclient-3.1.jar"/>
+      <zipfileset src="${basedir}/../commons-logging-1.0.4.jar"/>
+      <zipfileset src="${basedir}/../commons-codec-1.2.jar"/>
+      <zipfileset src="${basedir}/../json-lib-2.4-jdk15.jar"/>
+      <zipfileset src="${basedir}/../commons-beanutils-1.8.0.jar"/>
+      <zipfileset src="${basedir}/../commons-collections-3.2.1.jar"/>
+      <zipfileset src="${basedir}/../commons-lang-2.5.jar"/>
+      <zipfileset src="${basedir}/../ezmorph-1.0.6.jar"/>
+      <zipfileset src="${basedir}/../guava-18.0.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-core-javadoc.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-device-javadoc.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-example-javadoc.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-gpio-extension.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-core-sources.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-example-sources.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/junit.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-gpio-extension-sources.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-device.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-example.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-gpio-extension-javadoc.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-core.jar"/>
+      <zipfileset src="${basedir}/../../../Downloads/pi4j-1.2-SNAPSHOT/lib/pi4j-device-sources.jar"/>
+      <zipfileset src="${basedir}/SpotifyLibrary/junit-4.12.jar"/>
+      <zipfileset src="${basedir}/SpotifyLibrary/hamcrest-core-1.3.jar"/>
+    </jar>
+    <copy file="${temp.jar.path.Lampemm.jar3}" tofile="${artifact.temp.output.lampemm:potentiometertest}/Lampemm.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.lampemm:jar, artifact.lampemm:jar2, artifact.lampemm:potentiometertest" description="Build all artifacts">
+    <mkdir dir="${artifact.output.lampemm:potentiometertest}"/>
+    <copy todir="${artifact.output.lampemm:potentiometertest}">
+      <fileset dir="${artifact.temp.output.lampemm:potentiometertest}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

@@ -37,10 +37,13 @@ public class SpotifyPoller {
      */
     public void start () {
         final Runnable updater = new Runnable() {
+            boolean isFirstTime = true;
+
             @Override
             public void run() {
                 CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
-                if (!trackProgressBar.isTracking()) {
+                if (!trackProgressBar.isTracking() || isFirstTime) {
+                    isFirstTime = false;
                     trackProgressBar.setPositionForTimeElapsed(currentPlayback);
                     musicDisplay.setDisplayForCurrentPlayback(currentPlayback);
                 }

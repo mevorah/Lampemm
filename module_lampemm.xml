@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_lampemm" default="compile.module.lampemm">
+  <dirname property="module.lampemm.basedir" file="${ant.file.module_lampemm}"/>
+  
+  <property name="module.jdk.home.lampemm" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.lampemm" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.lampemm" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.lampemm" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="lampemm.output.dir" value="${module.lampemm.basedir}/out/production/Lampemm"/>
+  <property name="lampemm.testoutput.dir" value="${module.lampemm.basedir}/out/test/Lampemm"/>
+  
+  <path id="lampemm.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="lampemm.module.production.classpath">
+    <path refid="${module.jdk.classpath.lampemm}"/>
+    <path refid="library.junit:junit:4.12.classpath"/>
+    <pathelement location="${main.output.dir}"/>
+    <path refid="library.se.michaelthelin.spotify:spotify-web-api-java:1.5.0.classpath"/>
+    <path refid="library.org.mockito:mockito-core:2.1.0.classpath"/>
+    <path refid="library.com.pi4j:pi4j-core:1.1.classpath"/>
+    <path refid="library.com.pi4j:pi4j-gpio-extension:1.1.classpath"/>
+    <path refid="library.com.pi4j:pi4j-device:1.1.classpath"/>
+  </path>
+  
+  <path id="lampemm.runtime.production.module.classpath">
+    <pathelement location="${lampemm.output.dir}"/>
+    <path refid="library.junit:junit:4.12.classpath"/>
+    <path refid="main.runtime.production.module.classpath"/>
+    <path refid="library.se.michaelthelin.spotify:spotify-web-api-java:1.5.0.classpath"/>
+    <path refid="library.org.mockito:mockito-core:2.1.0.classpath"/>
+    <path refid="library.com.pi4j:pi4j-core:1.1.classpath"/>
+    <path refid="library.com.pi4j:pi4j-gpio-extension:1.1.classpath"/>
+    <path refid="library.com.pi4j:pi4j-device:1.1.classpath"/>
+  </path>
+  
+  <path id="lampemm.module.classpath">
+    <path refid="${module.jdk.classpath.lampemm}"/>
+    <pathelement location="${lampemm.output.dir}"/>
+    <path refid="library.junit:junit:4.12.classpath"/>
+    <pathelement location="${main.testoutput.dir}"/>
+    <pathelement location="${main.output.dir}"/>
+    <path refid="library.se.michaelthelin.spotify:spotify-web-api-java:1.5.0.classpath"/>
+    <path refid="library.org.mockito:mockito-core:2.1.0.classpath"/>
+    <path refid="library.com.pi4j:pi4j-core:1.1.classpath"/>
+    <path refid="library.com.pi4j:pi4j-gpio-extension:1.1.classpath"/>
+    <path refid="library.com.pi4j:pi4j-device:1.1.classpath"/>
+  </path>
+  
+  <path id="lampemm.runtime.module.classpath">
+    <pathelement location="${lampemm.testoutput.dir}"/>
+    <pathelement location="${lampemm.output.dir}"/>
+    <path refid="library.junit:junit:4.12.classpath"/>
+    <path refid="main.runtime.module.classpath"/>
+    <path refid="library.se.michaelthelin.spotify:spotify-web-api-java:1.5.0.classpath"/>
+    <path refid="library.org.mockito:mockito-core:2.1.0.classpath"/>
+    <path refid="library.com.pi4j:pi4j-core:1.1.classpath"/>
+    <path refid="library.com.pi4j:pi4j-gpio-extension:1.1.classpath"/>
+    <path refid="library.com.pi4j:pi4j-device:1.1.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.lampemm">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.lampemm">
+    <patternset refid="excluded.from.module.lampemm"/>
+  </patternset>
+  
+  <path id="lampemm.module.sourcepath">
+    <dirset dir="${module.lampemm.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="lampemm.module.test.sourcepath">
+    <dirset dir="${module.lampemm.basedir}">
+      <include name="tst"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.lampemm" depends="compile.module.lampemm.production,compile.module.lampemm.tests" description="Compile module Lampemm"/>
+  
+  <target name="compile.module.lampemm.production" depends="register.custom.compilers,compile.module.main" description="Compile module Lampemm; production classes">
+    <mkdir dir="${lampemm.output.dir}"/>
+    <javac2 destdir="${lampemm.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.lampemm}/javac">
+      <compilerarg line="${compiler.args.lampemm}"/>
+      <bootclasspath refid="lampemm.module.bootclasspath"/>
+      <classpath refid="lampemm.module.production.classpath"/>
+      <src refid="lampemm.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.lampemm"/>
+    </javac2>
+    
+    <copy todir="${lampemm.output.dir}">
+      <fileset dir="${module.lampemm.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.lampemm.tests" depends="register.custom.compilers,compile.module.lampemm.production" description="compile module Lampemm; test classes" unless="skip.tests">
+    <mkdir dir="${lampemm.testoutput.dir}"/>
+    <javac2 destdir="${lampemm.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.lampemm}/javac">
+      <compilerarg line="${compiler.args.lampemm}"/>
+      <bootclasspath refid="lampemm.module.bootclasspath"/>
+      <classpath refid="lampemm.module.classpath"/>
+      <src refid="lampemm.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.lampemm"/>
+    </javac2>
+    
+    <copy todir="${lampemm.testoutput.dir}">
+      <fileset dir="${module.lampemm.basedir}/tst">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.lampemm" description="cleanup module">
+    <delete dir="${lampemm.output.dir}"/>
+    <delete dir="${lampemm.testoutput.dir}"/>
+  </target>
+</project>
