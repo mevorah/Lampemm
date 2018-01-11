@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class SpotifyPoller {
     private final ScheduledExecutorService playbackScheduler = Executors.newSingleThreadScheduledExecutor();
     private final long POLLING_INITIAL_DELAY_MILLIS = 0;
-    private final long PLAYBACK_POLLING_RATE_MILLIS = 500;
+    private final long PLAYBACK_POLLING_RATE_MILLIS = 250;
 
     private final SpotifyServiceProxy spotifyServiceProxy;
     private final TrackProgressBar trackProgressBar;
@@ -41,11 +41,17 @@ public class SpotifyPoller {
 
             @Override
             public void run() {
-                CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
-                if (!trackProgressBar.isTracking() || isFirstTime) {
-                    isFirstTime = false;
-                    trackProgressBar.setPositionForTimeElapsed(currentPlayback);
-                    musicDisplay.setDisplayForCurrentPlayback(currentPlayback);
+                // Don't even place another request if a seeking request is currently in progress
+                boolean isSeekingRequestInProgress = spotifyServiceProxy.getIsSeekToPositionRequestInProgress();
+                if (!isSeekingRequestInProgress) {
+                    boolean isTracking = trackProgressBar.isTracking();
+                    CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
+                    if (!isTracking ||
+                            isFirstTime) {
+                        isFirstTime = false;
+                        trackProgressBar.setPositionForTimeElapsed(currentPlayback);
+                        musicDisplay.setDisplayForCurrentPlayback(currentPlayback);
+                    }
                 }
             }
         };

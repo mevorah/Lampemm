@@ -9,6 +9,7 @@ import com.wrapper.spotify.Api;
 import com.wrapper.spotify.exceptions.WebApiException;
 import com.wrapper.spotify.methods.AbstractRequest;
 import com.wrapper.spotify.methods.CurrentPlaybackRequest;
+import com.wrapper.spotify.methods.SeekToPositionRequest;
 import com.wrapper.spotify.methods.authentication.RefreshAccessTokenRequest;
 import com.wrapper.spotify.models.AuthorizationCodeCredentials;
 import com.wrapper.spotify.models.RefreshAccessTokenCredentials;
@@ -34,6 +35,9 @@ public class SpotifyServiceProxy {
     private final Credentials credentials;
 
     private CurrentPlayback cachedCurrentPlayback;
+
+    private boolean seekRequestInProgress = false;
+    private boolean hasRetrievedPlaybackAfterLastSeek = true;
 
     private SpotifyServiceProxy(Credentials credentials) {
         this.credentials = credentials;
@@ -111,6 +115,8 @@ public class SpotifyServiceProxy {
             System.out.println(ex);
             currentPlayback = cachedCurrentPlayback;
         }
+
+        hasRetrievedPlaybackAfterLastSeek = true;
         return currentPlayback;
     }
 
@@ -118,8 +124,27 @@ public class SpotifyServiceProxy {
         return cachedCurrentPlayback;
     }
 
-    public void seekToPosition(int positionMillis) {
+    public boolean getHasRetrievedPlaybackAfterLastSeek() {
+        return hasRetrievedPlaybackAfterLastSeek;
+    }
 
+    public boolean getIsSeekToPositionRequestInProgress() {
+        return seekRequestInProgress;
+    }
+
+    public void seekToPosition(int positionMillis) {
+        seekRequestInProgress = true;
+        SeekToPositionRequest seekToPositionRequest = spotify.seekToPosition(positionMillis).build();
+        String response = null;
+        try {
+            response = seekToPositionRequest.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WebApiException e) {
+            e.printStackTrace();
+        }
+        seekRequestInProgress = false;
+        hasRetrievedPlaybackAfterLastSeek = false;
     }
 
 }

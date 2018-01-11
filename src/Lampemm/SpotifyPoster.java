@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class SpotifyPoster {
     private final ScheduledExecutorService trackProgressBarPoller = Executors.newSingleThreadScheduledExecutor();
     private final long POLLING_INITIAL_DELAY_MILLIS = 0;
-    private final long PROGRESS_POLLING_RATE_MILLIS = 500;
+    private final long PROGRESS_POLLING_RATE_MILLIS = 250;
 
     private final SpotifyServiceProxy spotifyServiceProxy;
     private final TrackProgressBar trackProgressBar;
@@ -35,32 +35,34 @@ public class SpotifyPoster {
 
     public void start() {
         final Runnable updater = new Runnable() {
-            private boolean isTrackingPreviously = false;
-
-            /**
-             * Triggered callback when the track progress bar's
-             * position is manually changed.
-             */
-            public void progressManuallyChanged() {
-                CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
-                int positionTime = trackProgressBar.getTimeElapsedForPosition(currentPlayback);
-                System.out.println("Progress Changed, moving to:" + positionTime);
-                spotifyServiceProxy.seekToPosition(positionTime);
-            }
+            private boolean wasTrackingPreviously = false;
 
             @Override
             public void run() {
-                if (trackProgressBar.isTracking()) {
-                    isTrackingPreviously = true;
+                boolean isCurrentlyTracking = trackProgressBar.isTracking();
+                if (isCurrentlyTracking) {
+                    wasTrackingPreviously = true;
                     CurrentPlayback currentPlayback = spotifyServiceProxy.getCachedCurrentPlayback();
                     if (currentPlayback != null) {
                         int positionTime = trackProgressBar.getTimeElapsedForPosition(currentPlayback);
                         DisplayableTime displayableTime = new DisplayableTime(positionTime);
                         musicDisplay.setTime(displayableTime.toString());
                     }
-                } else if (isTrackingPreviously && !trackProgressBar.isTracking()) {
-                    isTrackingPreviously = false;
-                    progressManuallyChanged();
+                } else if (wasTrackingPreviously && !isCurrentlyTracking) {
+                    System.out.println("Going to make a seek request");
+                    wasTrackingPreviously = false;
+
+                    // Ensure no seek request is going on, and ensure everything is updated from the last request
+                    boolean hasRetrievedPlaybackAfterLastSeek = spotifyServiceProxy.getHasRetrievedPlaybackAfterLastSeek();
+                    System.out.println("hasRetrievedPlaybackAfterLastSeek:" + hasRetrievedPlaybackAfterLastSeek);
+                    if (hasRetrievedPlaybackAfterLastSeek) {
+                        // Get cached, only concerned with the song duration. We don't
+                        // need to go through the trouble of making a new request
+                        final CurrentPlayback currentPlayback = spotifyServiceProxy.getCachedCurrentPlayback();
+                        final int positionTime = trackProgressBar.getTimeElapsedForLastTrackingEvent(currentPlayback);
+                        System.out.println("Seeking to last tracking event:"+positionTime);
+                        spotifyServiceProxy.seekToPosition(positionTime);
+                    }
                 }
             }
         };

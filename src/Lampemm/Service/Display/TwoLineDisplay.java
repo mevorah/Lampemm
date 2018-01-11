@@ -31,8 +31,8 @@ public class TwoLineDisplay implements MusicDisplay {
     private final static int MAX_TITLE_LENGTH = LCD_COLUMNS - ELLIPSES_LENGTH;
     private final static int MAX_ARTIST_LENGTH = LCD_COLUMNS - TIME_LENGTH - ELLIPSES_LENGTH;
 
-    private String currentTitle;
-    private String currentArtist;
+    private String currentTitle = "";
+    private String currentArtist = "";
 
     private static final TwoLineDisplay instance = new TwoLineDisplay();
 
@@ -80,8 +80,16 @@ public class TwoLineDisplay implements MusicDisplay {
             lcd.clear();
         }
 
-        setTitle(title);
-        setArtist(artist);
+        if (!title.equals(currentTitle)) {
+            currentTitle = title;
+            setTitle(title);
+        }
+
+        if (!artist.equals(currentArtist)) {
+            currentArtist = artist;
+            setArtist(artist);
+        }
+
         setTime(time);
     }
 

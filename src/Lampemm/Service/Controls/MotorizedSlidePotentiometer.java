@@ -19,6 +19,8 @@ public class MotorizedSlidePotentiometer {
     private SpiDevice spi;
     private static final short CHANNEL_ONE = 1;
 
+    private boolean interuppted = false;
+
     // Motor Driver
     final GpioPinDigitalOutput pwmA;
     final GpioPinDigitalOutput ain1;
@@ -51,6 +53,13 @@ public class MotorizedSlidePotentiometer {
     }
 
     /**
+     * Allows client to stop motor movement mid movement
+     */
+    public void setInterupt() {
+        interuppted = true;
+    }
+
+    /**
      * Set the potentiometer's position to the fraction defined in the
      * position.
      *
@@ -69,7 +78,8 @@ public class MotorizedSlidePotentiometer {
         float high = target + TOLERANCE;
 
         int value = getValue(CHANNEL_ONE);
-        while (value < low || value > high) {
+
+        while ((value < low || value > high) && !interuppted) {
             value = getValue(CHANNEL_ONE);
             if (value < low) {
                 pwmA.high();
@@ -84,7 +94,13 @@ public class MotorizedSlidePotentiometer {
             } else {
                 break;
             }
+
+            if (interuppted) {
+                System.out.println("Motor movement interupted");
+            }
         }
+
+        interuppted = false;
         pwmA.low();
         ain2.low();
         ain1.low();

@@ -18,6 +18,7 @@ public class TrackProgressBar {
     private static final TrackProgressBar instance = new TrackProgressBar();
 
     private float lastActualInterval = -1;
+    private float lastTrackingPosition = -1;
 
     private TrackProgressBar() {
         this.motorizedSlidePotentiometer = MotorizedSlidePotentiometer.getInstance();
@@ -56,14 +57,24 @@ public class TrackProgressBar {
     public int getTimeElapsedForPosition(CurrentPlayback currentPlayback) {
         try {
             int duration = currentPlayback.getDuration();
-            float trackProgress = 0;
-            trackProgress = motorizedSlidePotentiometer.getPosition();
-            int timeElapsed = Math.round(duration * trackProgress);
+            float trackProgress = motorizedSlidePotentiometer.getPosition();
+            int timeElapsed = getTimeElapsed(duration, trackProgress);
             return timeElapsed;
         } catch (IOException ex) {
             System.out.println(ex);
             return 0;
         }
+    }
+
+    public int getTimeElapsedForLastTrackingEvent(CurrentPlayback currentPlayback) {
+        int duration = currentPlayback.getDuration();
+        float trackProgress = this.lastTrackingPosition;
+        int timeElapsed = getTimeElapsed(duration, trackProgress);
+        return timeElapsed;
+    }
+
+    public int getTimeElapsed (int duration, float progress) {
+        return Math.round(duration * progress);
     }
 
     /**
@@ -72,21 +83,34 @@ public class TrackProgressBar {
      * @return
      */
     public boolean isTracking() {
-        final float naturalInterval = Math.abs(motorizedSlidePotentiometer.getNaturalInterval());
-        final float actualInterval = Math.abs(motorizedSlidePotentiometer.getActualInterval());
 
-        BufferedValue bufferedNaturalInterval = new BufferedValue(naturalInterval, TRACKING_TOLERANCE_BUFFER);
-        BufferedValue bufferedActualInterval = new BufferedValue(actualInterval, ACTUAL_INTERVAL_BUFFER);
+        final float naturalInterval = motorizedSlidePotentiometer.getNaturalInterval();
+        final boolean isNaturalIntervalNegative = naturalInterval < 0;
+        final float actualInterval = motorizedSlidePotentiometer.getActualInterval();
+        final float actualIntervalAbs = Math.abs(actualInterval);
 
-        final boolean isTrackingNotNatural = !bufferedNaturalInterval.isWithinBoundsInclusive(actualInterval);
+        BufferedValue bufferedNaturalInterval = new BufferedValue(Math.abs(naturalInterval), TRACKING_TOLERANCE_BUFFER);
+        BufferedValue bufferedActualInterval = new BufferedValue(actualIntervalAbs, ACTUAL_INTERVAL_BUFFER);
+
+        final boolean isTrackingNotNatural = !bufferedNaturalInterval.isWithinBoundsInclusive(actualIntervalAbs);
         final boolean isTrackingDifferentActual = !bufferedActualInterval.isWithinBoundsInclusive(lastActualInterval);
 
-        this.lastActualInterval = actualInterval;
+        this.lastActualInterval = actualIntervalAbs;
 
-        final boolean isTracking = isTrackingDifferentActual && isTrackingNotNatural;
+        final boolean isTracking = isTrackingDifferentActual && isTrackingNotNatural && !isNaturalIntervalNegative;
 
-        System.out.println("IS Tracking:"+ isTracking);
+        if (isTracking) {
+            // Cancel any current motor movement - we're tracking!
+            motorizedSlidePotentiometer.setInterupt();
+            try {
+                this.lastTrackingPosition = motorizedSlidePotentiometer.getPosition();
+            } catch (IOException e) {
+                System.out.println("Couldn't get position:" + e);
+            }
+        }
 
         return isTracking;
     }
 }
+
+
