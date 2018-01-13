@@ -33,26 +33,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SeekToPositionRequest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../spotify-web-api-java/src/main/java/com/wrapper/spotify/methods/SeekToPositionRequest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3">
-              <caret line="11" column="60" lean-forward="true" selection-start-line="11" selection-start-column="60" selection-end-line="11" selection-end-column="60" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#434#435#0" expanded="true" />
-                <element signature="e#464#465#0" expanded="true" />
-                <element signature="e#1157#1158#0" expanded="true" />
-                <element signature="e#1215#1216#0" expanded="true" />
-                <element signature="e#1374#1375#0" expanded="true" />
-                <element signature="e#1461#1462#0" expanded="true" />
-                <element signature="e#1519#1520#0" expanded="true" />
-                <element signature="e#1598#1599#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="SpotifyServiceProxy.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Lampemm/Service/Spotify/SpotifyServiceProxy.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -93,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Lampemm.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Lampemm.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Lampemm/Lampemm.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="19" column="87" lean-forward="false" selection-start-line="19" selection-start-column="87" selection-end-line="19" selection-end-column="87" />
+            <state relative-caret-position="390">
+              <caret line="29" column="61" lean-forward="true" selection-start-line="29" selection-start-column="61" selection-end-line="29" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -131,13 +111,13 @@
       <file leaf-file-name="MotorizedSlidePotentiometer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Lampemm/Service/Controls/MotorizedSlidePotentiometer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-28">
-              <caret line="57" column="16" lean-forward="false" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="16" />
+            <state relative-caret-position="522">
+              <caret line="103" column="19" lean-forward="true" selection-start-line="103" selection-start-column="19" selection-end-line="103" selection-end-column="19" />
               <folding>
                 <element signature="e#1798#1799#0" expanded="true" />
                 <element signature="e#1832#1833#0" expanded="true" />
-                <element signature="e#3302#3303#0" expanded="true" />
-                <element signature="e#3369#3370#0" expanded="true" />
+                <element signature="e#3220#3221#0" expanded="true" />
+                <element signature="e#3287#3288#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -159,11 +139,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SpotifyPoller.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SpotifyPoller.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Lampemm/SpotifyPoller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
-              <caret line="52" column="65" lean-forward="false" selection-start-line="52" selection-start-column="37" selection-end-line="52" selection-end-column="65" />
+            <state relative-caret-position="455">
+              <caret line="46" column="32" lean-forward="false" selection-start-line="46" selection-start-column="32" selection-end-line="46" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -228,13 +208,13 @@
         <option value="$PROJECT_DIR$/../spotify-web-api-java/src/main/java/com/wrapper/spotify/methods/SeekToPositionRequest.java" />
         <option value="$PROJECT_DIR$/../spotify-web-api-java/src/main/java/com/wrapper/spotify/methods/AbstractRequest.java" />
         <option value="$PROJECT_DIR$/src/Lampemm/Service/Display/TwoLineDisplay.java" />
-        <option value="$PROJECT_DIR$/src/Lampemm/Service/Controls/MotorizedSlidePotentiometer.java" />
         <option value="$PROJECT_DIR$/../spotify-web-api-java/src/main/java/com/wrapper/spotify/SpotifyHttpManager.java" />
         <option value="$PROJECT_DIR$/src/Lampemm/SpotifyPoller.java" />
         <option value="$PROJECT_DIR$/src/Lampemm/Service/Spotify/SpotifyServiceProxy.java" />
         <option value="$PROJECT_DIR$/src/Lampemm/SpotifyPoster.java" />
         <option value="$PROJECT_DIR$/src/Lampemm/Service/Controls/TrackProgressBar.java" />
         <option value="$PROJECT_DIR$/src/Lampemm/Lampemm.java" />
+        <option value="$PROJECT_DIR$/src/Lampemm/Service/Controls/MotorizedSlidePotentiometer.java" />
       </list>
     </option>
   </component>
@@ -807,7 +787,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -822,7 +801,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3282353" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Learn" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24964234" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -913,13 +892,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/../mockito-core-2.1.0-sources.jar!/org/mockito/internal/creation/bytebuddy/SubclassByteBuddyMockMaker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/../mockito-core-2.1.0-sources.jar!/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -1158,19 +1130,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Lampemm/Service/Controls/MotorizedSlidePotentiometer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-28">
-          <caret line="57" column="16" lean-forward="false" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="16" />
-          <folding>
-            <element signature="e#1798#1799#0" expanded="true" />
-            <element signature="e#1832#1833#0" expanded="true" />
-            <element signature="e#3302#3303#0" expanded="true" />
-            <element signature="e#3369#3370#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Lampemm/Service/Display/TwoLineDisplay.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="411">
@@ -1221,18 +1180,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Lampemm/SpotifyPoller.java">
+    <entry file="file://$PROJECT_DIR$/src/Lampemm/Lampemm.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="52" column="65" lean-forward="false" selection-start-line="52" selection-start-column="37" selection-end-line="52" selection-end-column="65" />
+        <state relative-caret-position="390">
+          <caret line="29" column="61" lean-forward="true" selection-start-line="29" selection-start-column="61" selection-end-line="29" selection-end-column="61" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Lampemm/Lampemm.java">
+    <entry file="jar://$PROJECT_DIR$/../pi4j-core-1.1-sources.jar!/com/pi4j/io/gpio/GpioPinDigitalOutput.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="19" column="87" lean-forward="false" selection-start-line="19" selection-start-column="87" selection-end-line="19" selection-end-column="87" />
+        <state relative-caret-position="492">
+          <caret line="46" column="14" lean-forward="false" selection-start-line="46" selection-start-column="14" selection-end-line="46" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Lampemm/Service/Controls/MotorizedSlidePotentiometer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="103" column="19" lean-forward="true" selection-start-line="103" selection-start-column="19" selection-end-line="103" selection-end-column="19" />
+          <folding>
+            <element signature="e#1798#1799#0" expanded="true" />
+            <element signature="e#1832#1833#0" expanded="true" />
+            <element signature="e#3220#3221#0" expanded="true" />
+            <element signature="e#3287#3288#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Lampemm/SpotifyPoller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="455">
+          <caret line="46" column="32" lean-forward="false" selection-start-line="46" selection-start-column="32" selection-end-line="46" selection-end-column="32" />
           <folding />
         </state>
       </provider>

@@ -82,18 +82,16 @@ public class MotorizedSlidePotentiometer {
         while ((value < low || value > high) && !interuppted) {
             value = getValue(CHANNEL_ONE);
             if (value < low) {
-                pwmA.high();
                 ain2.low();
                 ain1.high();
-                stby.high();
             } else if (value > high) {
-                pwmA.high();
                 ain2.high();
                 ain1.low();
-                stby.high();
             } else {
                 break;
             }
+
+            pwmA.pulse(3, true);
 
             if (interuppted) {
                 System.out.println("Motor movement interupted");

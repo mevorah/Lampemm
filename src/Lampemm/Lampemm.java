@@ -18,6 +18,7 @@ public class Lampemm {
          *          with the initial variables/ if conditions in the pollers
          * TODO: 4. Improve tracking detection, occasionally jumps around
          * TODO: 5. Time changes to what it was briefly before changing to the new time
+         * TODO: 6. Pause -> ////
          *
          */
 
