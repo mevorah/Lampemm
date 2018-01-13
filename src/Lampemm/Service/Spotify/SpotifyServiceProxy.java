@@ -1,5 +1,6 @@
 package Lampemm.Service.Spotify;
 
+import Lampemm.Model.BufferedValue;
 import Lampemm.Model.CurrentPlayback;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.FutureCallback;
@@ -37,7 +38,11 @@ public class SpotifyServiceProxy {
     private CurrentPlayback cachedCurrentPlayback;
 
     private boolean seekRequestInProgress = false;
-    private boolean hasRetrievedPlaybackAfterLastSeek = true;
+    boolean wasSeekingForward = true;
+    int durationBeforeSeek = -1;
+    int lastSeekingTarget = -1;
+    int positionBeforeSeek = -1;
+    boolean isCurrentPositionInSyncWithLastSeek = true;
 
     private SpotifyServiceProxy(Credentials credentials) {
         this.credentials = credentials;
@@ -104,47 +109,86 @@ public class SpotifyServiceProxy {
                 POLLING_INITIAL_DELAY_MILLIS, REFRESH_TOKEN_POLLING_RATE_MILLIS, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Call Spotify to get the user's current playback
+     * @return
+     */
     public CurrentPlayback getCurrentPlayback() {
         CurrentPlaybackRequest currentPlaybackRequest = spotify.currentPlayback().build();
         CurrentPlayback currentPlayback;
         try {
             currentPlayback = new CurrentPlayback(currentPlaybackRequest.get());
             cachedCurrentPlayback = currentPlayback;
-            //System.out.println(currentPlayback);
         } catch (IOException | WebApiException ex) {
-            System.out.println(ex);
+            System.err.println("Failed retrieve current playback, deffering to the result of the last " +
+                    "CurrentPlayback request:"+ ex.getMessage());
             currentPlayback = cachedCurrentPlayback;
         }
 
-        hasRetrievedPlaybackAfterLastSeek = true;
         return currentPlayback;
     }
 
+    /**
+     * Get the CurrentPlayback of the last getCurrentPlaybackRequest
+     * @return
+     */
     public CurrentPlayback getCachedCurrentPlayback() {
         return cachedCurrentPlayback;
     }
 
-    public boolean getHasRetrievedPlaybackAfterLastSeek() {
-        return hasRetrievedPlaybackAfterLastSeek;
-    }
-
+    /**
+     * Return if there is currenty a seek request in progress
+     * @return
+     */
     public boolean getIsSeekToPositionRequestInProgress() {
         return seekRequestInProgress;
     }
 
-    public void seekToPosition(int positionMillis) {
+    /**
+     * After a seek request has occurred, returns whether the most recent CurrentPlayback has become in sync
+     * with the seek. This addresses an issue where even after a seek request has occurred, a getCurrentPlayback
+     * request still returns an old value.
+     * @return
+     */
+    public boolean isCurrentPositionInSyncWithLastSeek() {
+        if (!isCurrentPositionInSyncWithLastSeek) {
+            int currentPlaybackTimeElapsed = cachedCurrentPlayback.getTimeElapsed();
+            BufferedValue songDuration = new BufferedValue(durationBeforeSeek, 2000);
+            if (songDuration.isWithinBoundsInclusive(lastSeekingTarget)) {
+                isCurrentPositionInSyncWithLastSeek = songDuration.isWithinBoundsInclusive(currentPlaybackTimeElapsed) || currentPlaybackTimeElapsed < 2000;
+            } else if (wasSeekingForward) {
+                isCurrentPositionInSyncWithLastSeek = currentPlaybackTimeElapsed > lastSeekingTarget;
+            } else {
+                isCurrentPositionInSyncWithLastSeek = currentPlaybackTimeElapsed < positionBeforeSeek && currentPlaybackTimeElapsed > lastSeekingTarget;
+            }
+        }
+        return isCurrentPositionInSyncWithLastSeek;
+    }
+
+    /**
+     * Call Spotify to move user's poition to the targetPositionMillis
+     * @param targetPositionMillis
+     */
+    public void seekToPosition(int targetPositionMillis) {
         seekRequestInProgress = true;
-        SeekToPositionRequest seekToPositionRequest = spotify.seekToPosition(positionMillis).build();
-        String response = null;
+
+        // Before seek occurs, set values for the currentInSync function above
+        durationBeforeSeek = cachedCurrentPlayback.getDuration();
+        positionBeforeSeek = cachedCurrentPlayback.getTimeElapsed() ;
+        lastSeekingTarget = targetPositionMillis;
+        wasSeekingForward = targetPositionMillis > positionBeforeSeek;
+        isCurrentPositionInSyncWithLastSeek = false;
+
+        SeekToPositionRequest seekToPositionRequest = spotify.seekToPosition(targetPositionMillis).build();
         try {
-            response = seekToPositionRequest.get();
+            seekToPositionRequest.get();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (WebApiException e) {
             e.printStackTrace();
         }
+
         seekRequestInProgress = false;
-        hasRetrievedPlaybackAfterLastSeek = false;
     }
 
 }

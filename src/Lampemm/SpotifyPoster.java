@@ -39,30 +39,33 @@ public class SpotifyPoster {
 
             @Override
             public void run() {
-                boolean isCurrentlyTracking = trackProgressBar.isTracking();
-                if (isCurrentlyTracking) {
-                    wasTrackingPreviously = true;
-                    CurrentPlayback currentPlayback = spotifyServiceProxy.getCachedCurrentPlayback();
-                    if (currentPlayback != null) {
-                        int positionTime = trackProgressBar.getTimeElapsedForPosition(currentPlayback);
-                        DisplayableTime displayableTime = new DisplayableTime(positionTime);
-                        musicDisplay.setTime(displayableTime.toString());
-                    }
-                } else if (wasTrackingPreviously && !isCurrentlyTracking) {
-                    System.out.println("Going to make a seek request");
-                    wasTrackingPreviously = false;
+                try {
+                    boolean isCurrentlyTracking = trackProgressBar.isTracking();
+                    if (isCurrentlyTracking) {
+                        wasTrackingPreviously = true;
+                        CurrentPlayback currentPlayback = spotifyServiceProxy.getCachedCurrentPlayback();
+                        if (currentPlayback != null) {
+                            int positionTime = trackProgressBar.getTimeElapsedForPosition(currentPlayback);
+                            DisplayableTime displayableTime = new DisplayableTime(positionTime);
+                            System.out.println("[Poster] SettingTime:"+displayableTime);
+                            musicDisplay.setDisplayForCurrentPlayback(currentPlayback.getTitle(), currentPlayback.getArtists(), displayableTime);
+                        }
+                    } else if (wasTrackingPreviously && !isCurrentlyTracking) {
+                        wasTrackingPreviously = false;
 
-                    // Ensure no seek request is going on, and ensure everything is updated from the last request
-                    boolean hasRetrievedPlaybackAfterLastSeek = spotifyServiceProxy.getHasRetrievedPlaybackAfterLastSeek();
-                    System.out.println("hasRetrievedPlaybackAfterLastSeek:" + hasRetrievedPlaybackAfterLastSeek);
-                    if (hasRetrievedPlaybackAfterLastSeek) {
                         // Get cached, only concerned with the song duration. We don't
                         // need to go through the trouble of making a new request
                         final CurrentPlayback currentPlayback = spotifyServiceProxy.getCachedCurrentPlayback();
-                        final int positionTime = trackProgressBar.getTimeElapsedForLastTrackingEvent(currentPlayback);
-                        System.out.println("Seeking to last tracking event:"+positionTime);
-                        spotifyServiceProxy.seekToPosition(positionTime);
+                        final int targetPositionTime = trackProgressBar.getTimeElapsedForLastTrackingEvent(currentPlayback);
+                        System.out.println("Seeking to last tracking event:"+targetPositionTime);
+
+                        // Seek to position, if seek to position already in flight, overwrite with
+                        // new request
+                        spotifyServiceProxy.seekToPosition(targetPositionTime);
+
                     }
+                } catch (Exception e) {
+                    System.err.println("Unhandled exception thrown from poster thread:" + e.getMessage());
                 }
             }
         };

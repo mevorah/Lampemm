@@ -11,31 +11,29 @@ import Lampemm.Service.Spotify.SpotifyServiceProxy;
 public class Lampemm {
     public static void main(String [] args) {
         /**
-         * TODO: 1. Make motor movement smoother, right now very basic - overshooting the target and then moving
-         *          backwards.
-         * TODO: 2. Bug where time is displayed in the upper left corner of the screen
-         * TODO: 3. Issue where tracking stops altogether, happens randomly when started up (Maybe something to do
+         * TODO: 1. Fixed - Added pulsing - Make motor movement smoother, right now very basic - overshooting the target and then moving
+         *          backwards. -
+         * TODO: 2. Fixed - Added lock - Bug where time is displayed in the upper left corner of the screen
+         * TODO: 3. Fixed - Issue where tracking stops altogether, happens randomly when started up (Maybe something to do
          *          with the initial variables/ if conditions in the pollers
          * TODO: 4. Improve tracking detection, occasionally jumps around
-         * TODO: 5. Time changes to what it was briefly before changing to the new time
+         * TODO: 5. Fixed - Time changes to what it was briefly before changing to the new time
          * TODO: 6. Pause -> ////
+         * TODO: 7. Fixed - Fix artist disapearing
          *
          */
 
-        try {
-            MusicDisplay display = TwoLineDisplay.getInstance();
-            display.setStatus("Lampemm");
+        // Set display first to have something shown at startup
+        MusicDisplay display = TwoLineDisplay.getInstance();
+        display.setStatus("Lampemm");
 
-            SpotifyPoller spotifyPoller = new SpotifyPoller(SpotifyServiceProxy.getInstance(),
-                    TrackProgressBar.getInstance(), display);
-            spotifyPoller.start();
+        SpotifyPoller spotifyPoller = new SpotifyPoller(SpotifyServiceProxy.getInstance(),
+                TrackProgressBar.getInstance(), display);
+        spotifyPoller.start();
 
-            SpotifyPoster spotifyPoster = new SpotifyPoster(SpotifyServiceProxy.getInstance(),
-                    TrackProgressBar.getInstance(), display);
-            spotifyPoster.start();
-        } catch (Exception e) {
-            System.out.println("Crashed:"+ e.getMessage());
-        }
+        SpotifyPoster spotifyPoster = new SpotifyPoster(SpotifyServiceProxy.getInstance(),
+                TrackProgressBar.getInstance(), display);
+        spotifyPoster.start();
 
     }
 }

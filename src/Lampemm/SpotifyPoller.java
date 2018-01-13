@@ -1,6 +1,7 @@
 package Lampemm;
 
 import Lampemm.Model.CurrentPlayback;
+import Lampemm.Model.DisplayableTime;
 import Lampemm.Service.Controls.TrackProgressBar;
 import Lampemm.Service.Display.MusicDisplay;
 import Lampemm.Service.Spotify.SpotifyServiceProxy;
@@ -38,20 +39,36 @@ public class SpotifyPoller {
     public void start () {
         final Runnable updater = new Runnable() {
             boolean isFirstTime = true;
+            boolean wasTrackingPreviously = false;
 
             @Override
             public void run() {
-                // Don't even place another request if a seeking request is currently in progress
-                boolean isSeekingRequestInProgress = spotifyServiceProxy.getIsSeekToPositionRequestInProgress();
-                if (!isSeekingRequestInProgress) {
-                    boolean isTracking = trackProgressBar.isTracking();
-                    CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
-                    if (!isTracking ||
-                            isFirstTime) {
-                        isFirstTime = false;
-                        trackProgressBar.setPositionForTimeElapsed(currentPlayback);
-                        musicDisplay.setDisplayForCurrentPlayback(currentPlayback);
+                try {
+                    // Don't even place another request if a seeking request is currently in progress
+                    boolean isSeekingRequestInProgress = spotifyServiceProxy.getIsSeekToPositionRequestInProgress();
+                    if (!isSeekingRequestInProgress) {
+                        CurrentPlayback currentPlayback = spotifyServiceProxy.getCurrentPlayback();
+
+                        boolean isTracking = trackProgressBar.isTracking();
+                        boolean isCurrentPositionInSyncWithLastSeek = spotifyServiceProxy.isCurrentPositionInSyncWithLastSeek();
+
+                        System.out.println("[Poller] isTracking:"+isTracking+" InSyncWithLastSeek:"+isCurrentPositionInSyncWithLastSeek);
+                        if (isTracking) {
+                            wasTrackingPreviously = true;
+                        } else if ((!isTracking && isCurrentPositionInSyncWithLastSeek) ||
+                                isFirstTime) {
+                            isFirstTime = false;
+                            trackProgressBar.setPositionForTimeElapsed(currentPlayback);
+                            DisplayableTime d = new DisplayableTime(currentPlayback.getTimeElapsed());
+                            if (!wasTrackingPreviously) {
+                                System.out.println("[Poller] SettingTime:"+d.toString());
+                                musicDisplay.setDisplayForCurrentPlayback(currentPlayback);
+                            }
+                            wasTrackingPreviously = false;
+                        }
                     }
+                } catch (Exception e) {
+                    System.err.println("Unhandled exception thrown from poller thread:" + e.getMessage());
                 }
             }
         };

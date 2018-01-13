@@ -9,6 +9,8 @@ import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
 import com.pi4j.wiringpi.Lcd;
 
+import java.util.concurrent.Semaphore;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.System.exit;
 
@@ -36,7 +38,7 @@ public class TwoLineDisplay implements MusicDisplay {
 
     private static final TwoLineDisplay instance = new TwoLineDisplay();
 
-    private int lcdHandle;
+    private static Semaphore lock = new Semaphore(1);
 
     private TwoLineDisplay() {
         final GpioController gpio = GpioFactory.getInstance();
@@ -68,29 +70,38 @@ public class TwoLineDisplay implements MusicDisplay {
     }
 
     public void setDisplayForCurrentPlayback(CurrentPlayback currentPlayback) {
-        final String title = currentPlayback.getTitle();
-        final String artist = currentPlayback.getArtists();
-        final String time = new DisplayableTime(currentPlayback.getTimeElapsed()).toString();
+        setDisplayForCurrentPlayback(currentPlayback.getTitle(),
+                currentPlayback.getArtists(),
+                new DisplayableTime(currentPlayback.getTimeElapsed()));
+    }
 
-        checkNotNull(title);
-        checkNotNull(artist);
-        checkNotNull(time);
+    public void setDisplayForCurrentPlayback(final String title, final String artist, final DisplayableTime displayableTime) {
+        try {
+            lock.acquire();
+            final String time = displayableTime.toString();
 
-        if (!title.equals(currentTitle) || !artist.equals(currentArtist)) {
-            lcd.clear();
+            checkNotNull(title);
+            checkNotNull(artist);
+            checkNotNull(time);
+
+            if (!title.equals(currentTitle)) {
+                lcd.clear(LCD_ROW_ONE);
+                currentTitle = title;
+                setTitle(title);
+            }
+
+            if (!artist.equals(currentArtist)) {
+                lcd.clear(LCD_ROW_TWO, 0, MAX_ARTIST_LENGTH + ELLIPSES_LENGTH);
+                currentArtist = artist;
+                setArtist(artist);
+            }
+
+            setTime(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.release();
         }
-
-        if (!title.equals(currentTitle)) {
-            currentTitle = title;
-            setTitle(title);
-        }
-
-        if (!artist.equals(currentArtist)) {
-            currentArtist = artist;
-            setArtist(artist);
-        }
-
-        setTime(time);
     }
 
     @Override

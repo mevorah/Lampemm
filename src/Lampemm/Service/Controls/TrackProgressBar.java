@@ -97,6 +97,8 @@ public class TrackProgressBar {
 
         this.lastActualInterval = actualIntervalAbs;
 
+//        System.out.println("isNaturalIntervalNegative:"+ isNaturalIntervalNegative + " naturalInterval:" + naturalInterval + " actualInterval:" +actualInterval );
+
         final boolean isTracking = isTrackingDifferentActual && isTrackingNotNatural && !isNaturalIntervalNegative;
 
         if (isTracking) {
